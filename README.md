@@ -116,8 +116,10 @@ such as the package name (mlhub), version, etc.
 ### `__init__.py` ###
 
 The `main()` function is the entry point of the `ml` command.  It uses
-[**argparse**](https://docs.python.org/3/library/argparse.html) to
-parse the arguments passed to `ml`.  Arugment parsing consists of 2
+[**argparse**](https://docs.python.org/3/library/argparse.html) (See
+also [Parse command line
+arguments](https://github.com/simonzhaoms/python-notes/blob/master/parse-command-line-args.md))
+to parse the arguments passed to `ml`.  Arugment parsing consists of 2
 levels:
 1. Parse options of the `ml` command defined by the
    `mlhub.constants.OPTIONS` variable, such as `--version`.  These
