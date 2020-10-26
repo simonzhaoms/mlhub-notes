@@ -2,12 +2,15 @@
 
 Notes for [MLHub](https://github.com/mlhubber/mlhub).
 
-
-## Installation ##
-
-```bash
-
-```
+* [Development Environment Setup](#development-environment-setup)
+* [Source Code Structure](#source-code-structure)
+    + [`setup.py`](#setuppy)
+    + [`__init__.py`](#__init__py)
+    + [`commands.py`](#commandspy)
+* [MLHub Subcommands](#mlhub-subcommands)
+    + [`ml available`](#ml-available)
+    + [`ml installed`](#ml-installed)
+* [Reference](#reference)
 
 
 ## Development Environment Setup ##
@@ -35,7 +38,8 @@ pip install dist/mlhub*.gz
 
 # 2. or install mlhub from GitHub
 conda activate ${CONDA_ENV_NAME}
-pip install -e git://github.com/mlhubber/mlhub.git@<branch>#egg=mlhub  # replace <branch> with the actual branch name or commit hash
+# replace <branch> with the actual branch name or commit hash
+pip install -e git://github.com/mlhubber/mlhub.git@<branch>#egg=mlhub
 ```
 
 
@@ -102,8 +106,8 @@ such as the package name (mlhub), version, etc.
       `find_packages()`](https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages).
 * `package_data`
     + Specify which files (non-`.py` files) in a sub-package will be
-      included in the package.  See [Including Data
-      Files](https://setuptools.readthedocs.io/en/latest/setuptools.html#including-data-files).
+      included in the package.  See [Data Files
+      Support](https://setuptools.readthedocs.io/en/latest/userguide/datafiles.html).
 * `console_scripts` in `entry_points`
     + Register Python functions (parts after `:`) in a package (parts
       before `:`) as command-line tool (parts before `=`).  See
@@ -133,7 +137,78 @@ levels:
 Then the subcommands will be referred as `args.func` to be called at
 the end of `main()`.
 
-Logger and error handling will also be dealt with in `main()`.
+Logging configuration and error handling will also be dealt with in
+`main()`.
+
+
+### `commands.py` ###
+
+`commands.py` defines all the sub-commands of `ml`.  The mapping
+between sub-command names and functions is described in the
+`mlhub.constants.COMMANDS` dict.
+
+
+## MLHub Subcommands ##
+
+### `ml available` ###
+
+It will call `mlhub.commands.list_available()` to print the curated
+list of available packages at `mlhub.constants.MLHUB +
+mlhub.constants.META_YAML`(https://mlhub.ai/Packages.yaml).
+
+`ml available --name-only` will print the package names only.
+
+
+#### `ml installed` ####
+
+It will call `mlhub.commands.list_installed()` to print the list of
+locally-installed packages in the `mlhub.constants.MLINIT`
+(`~/.mlhub/`) folder by default.
+
+A valid MLHub model package directory will contain a file called
+`MLHUB.yaml` that describe the package.  For example:
+
+```yaml
+--- # animate
+meta:
+  name         : animate
+  title        : Tell a data narative through animations
+  keywords     : r, animation, plot, sports, line chart, athletics
+  version      : 2.1.5
+  languages    : R
+  modeller     : gganimate
+  type         : plot
+  display      : demo
+  license      : gpl3
+  author       : Vincent Yu
+  maintainer   : Graham.Williams@togaware.com
+  url          : https://github.com/gjwgit/animate
+dependencies:
+  system:
+    - eom
+    - cargo
+  cran:
+    - progress
+    - png
+    - tidyverse
+    - RColorBrewer
+    - gifski
+    - farver
+    - tweenr
+    - gganimate
+  github:
+    - ellisp/ggflags
+  files:
+    - animate_800.gif
+    - demo.R
+    - gganimate.tar.gz
+    - iaaf.csv
+    - iaaf.R
+    - README.md
+commands:
+  demo : Step through a series of animation demos.
+```
+
 
 
 
